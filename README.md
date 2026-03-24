@@ -4,6 +4,20 @@ A Rust CLI tool for programming LED name badges (USB VID `0x0416`, PID `0x5020`)
 
 Write messages, display built-in icons, and even use your badge as a **system monitor** showing CPU, memory, disk, GPU, and Ollama status.
 
+## Why this exists
+
+The [NVIDIA DGX Spark](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) is a silent powerhouse — no fan noise, no blinking LEDs, no visual indication that it's even doing anything. When you're running LLM inference or heavy GPU workloads, you have zero physical feedback about what the system is up to.
+
+This project was born out of that exact problem. I picked up a [BerryBase LED name tag](https://www.berrybase.de/) (11x44 pixels) as a cheap external indicator, and wrote this Rust CLI to drive it. It runs as a systemd service and continuously monitors:
+
+- **Linux system health** — CPU, memory, and disk usage with configurable warning/critical thresholds
+- **NVIDIA GPU load** — reads `nvidia-smi` metrics via NVML to show GPU utilization on the badge
+- **Ollama status** — polls the Ollama API to display which model is currently loaded and running
+
+The result: a tiny scrolling LED display sitting next to a silent DGX Spark that tells you at a glance whether your system is idle, running inference, or about to run out of memory.
+
+Beyond monitoring, `led-badge` also works as a general-purpose badge programming tool — send any text or icons to the display from the command line.
+
 ## Features
 
 - Write text messages with multiple display effects
