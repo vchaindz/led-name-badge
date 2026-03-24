@@ -1,0 +1,14 @@
+[Unit]
+Description=LED Badge System Monitor
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/led-badge monitor
+Restart=always
+RestartSec=5
+# Run as current user - adjust User= if needed
+# User=dennis
+
+[Install]
+WantedBy=multi-user.target
