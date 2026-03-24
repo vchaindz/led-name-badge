@@ -20,9 +20,9 @@ Beyond monitoring, `led-badge` also works as a general-purpose badge programming
 
 ## Demo
 
-<video src="assets/demo1.mp4" autoplay loop muted playsinline></video>
+![Demo 1](assets/demo1.gif)
 
-<video src="assets/demo2.mp4" autoplay loop muted playsinline></video>
+![Demo 2](assets/demo2.gif)
 
 ## Features
 
