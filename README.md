@@ -18,6 +18,12 @@ The result: a tiny scrolling LED display sitting next to a silent DGX Spark that
 
 Beyond monitoring, `led-badge` also works as a general-purpose badge programming tool — send any text or icons to the display from the command line.
 
+## Demo
+
+<video src="assets/demo1.mp4" autoplay loop muted playsinline></video>
+
+<video src="assets/demo2.mp4" autoplay loop muted playsinline></video>
+
 ## Features
 
 - Write text messages with multiple display effects
