@@ -170,6 +170,10 @@ led-badge monitor --ollama-url http://localhost:11434
 | `--ollama-url` | `http://localhost:11434` | Ollama API URL |
 | `--idle-message` | hostname | Message when no alerts |
 
+### Startup and shutdown messages
+
+The monitor displays `system :on: :on: :on:` on the badge when it starts and `system :off: :off: :off:` when it receives a shutdown signal (Ctrl+C or SIGTERM). This gives you immediate visual feedback that the system is coming up or going down — especially useful when running as a systemd service.
+
 ### Alert priority (highest first)
 
 1. Disk critical

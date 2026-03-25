@@ -3,6 +3,7 @@ use anyhow::Result;
 use serde::Deserialize;
 use sysinfo::{Disks, System};
 use std::time::Duration;
+use tokio::signal;
 use tokio::time::sleep;
 
 use crate::protocol::{DisplayMode, MessageConfig, ProtocolHeader};
@@ -317,6 +318,17 @@ pub async fn run_monitor(config: MonitorConfig, usb: UsbConnection) -> Result<()
     }
     println!();
 
+    // Display startup message on badge
+    let startup_msg = "system :on: :on: :on:";
+    println!("[START] {}", startup_msg);
+    if let Err(e) = send_to_badge(&usb, startup_msg) {
+        eprintln!("Failed to send startup message: {}", e);
+    }
+    last_alert = Some(startup_msg.to_string());
+
+    // Set up SIGTERM handler for graceful shutdown
+    let mut sigterm = signal::unix::signal(signal::unix::SignalKind::terminate())?;
+
     loop {
         // Refresh system info
         sys.refresh_cpu_usage();
@@ -368,6 +380,23 @@ pub async fn run_monitor(config: MonitorConfig, usb: UsbConnection) -> Result<()
             }
         }
 
-        sleep(Duration::from_secs(config.interval_secs)).await;
+        // Wait for next interval OR a shutdown signal
+        tokio::select! {
+            _ = sleep(Duration::from_secs(config.interval_secs)) => {
+                // Normal: continue to next poll cycle
+            }
+            _ = signal::ctrl_c() => {
+                let shutdown_msg = "system :off: :off: :off:";
+                println!("\n[SHUTDOWN] {}", shutdown_msg);
+                let _ = send_to_badge(&usb, shutdown_msg);
+                return Ok(());
+            }
+            _ = sigterm.recv() => {
+                let shutdown_msg = "system :off: :off: :off:";
+                println!("\n[SHUTDOWN] {}", shutdown_msg);
+                let _ = send_to_badge(&usb, shutdown_msg);
+                return Ok(());
+            }
+        }
     }
 }
